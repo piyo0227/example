@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>赤青チャレンジ</title>
+<style>
+body{font-family:sans-serif;text-align:center;background:#222;color:white;}
+button{font-size:20px;padding:15px 30px;margin:10px;border:none;border-radius:10px;cursor:pointer;}
+#red{background:red;color:white;}
+#blue{background:blue;color:white;}
+#result{font-size:28px;margin-top:20px;height:40px;}
+#info{margin-top:10px;font-size:18px;}
+</style>
+</head>
+<body>
+<h1>赤青チャレンジ</h1>
+<p>赤か青を選んで30連続当たりを目指せ！</p>
+
+<button id="red" onclick="choose('red')">赤</button>
+<button id="blue" onclick="choose('blue')">青</button>
+
+<div id="result"></div>
+<div id="info"></div>
+
+<script>
+let streak=0;
+
+function getProbability(){
+if(streak<5) return 1/2;
+if(streak<15) return 1/4;
+if(streak<25) return 1/6;
+return 1/8;
+}
+
+function choose(color){
+const prob=getProbability();
+const win=Math.random()<prob;
+
+const result=document.getElementById("result");
+const info=document.getElementById("info");
+
+if(win){
+streak++;
+result.textContent="当たり！";
+result.style.color="lime";
+
+if(streak>=30){
+result.textContent="クリア！！🎉";
+info.textContent="おめでとう！30連続成功！";
+streak=0;
+return;
+}
+
+}else{
+result.textContent="ハズレ！！";
+result.style.color="red";
+info.textContent="連続記録リセット…";
+streak=0;
+return;
+}
+
+info.textContent="現在: "+streak+"連勝 / 当たり確率: 1/"+Math.round(1/prob);
+}
+</script>
+</body>
+</html>
