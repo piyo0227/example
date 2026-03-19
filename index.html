@@ -3,25 +3,27 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>赤青チャレンジ</title>
+<title>赤青チャレンジ（改良版）</title>
 <style>
 body{font-family:sans-serif;text-align:center;background:#222;color:white;}
 button{font-size:20px;padding:15px 30px;margin:10px;border:none;border-radius:10px;cursor:pointer;}
 #red{background:red;color:white;}
 #blue{background:blue;color:white;}
-#result{font-size:28px;margin-top:20px;height:40px;}
+#result{font-size:32px;margin-top:20px;height:50px;}
 #info{margin-top:10px;font-size:18px;}
+#prob{margin-top:10px;font-size:20px;color:yellow;}
 </style>
 </head>
 <body>
 <h1>赤青チャレンジ</h1>
-<p>赤か青を選んで30連続当たりを目指せ！</p>
+<p>30連続当たりを目指せ！</p>
 
-<button id="red" onclick="choose('red')">赤</button>
-<button id="blue" onclick="choose('blue')">青</button>
+<button id="red" onclick="choose()">赤</button>
+<button id="blue" onclick="choose()">青</button>
 
 <div id="result"></div>
 <div id="info"></div>
+<div id="prob"></div>
 
 <script>
 let streak=0;
@@ -33,7 +35,12 @@ if(streak<25) return 1/6;
 return 1/8;
 }
 
-function choose(color){
+function updateProbDisplay(){
+const prob=getProbability();
+document.getElementById("prob").textContent="現在の当たり確率：1/"+(1/prob);
+}
+
+function choose(){
 const prob=getProbability();
 const win=Math.random()<prob;
 
@@ -46,9 +53,10 @@ result.textContent="当たり！";
 result.style.color="lime";
 
 if(streak>=30){
-result.textContent="クリア！！🎉";
-info.textContent="おめでとう！30連続成功！";
+result.textContent="🎉クリア！！🎉";
+info.textContent="30連続成功！すごい！";
 streak=0;
+updateProbDisplay();
 return;
 }
 
@@ -56,12 +64,21 @@ return;
 result.textContent="ハズレ！！";
 result.style.color="red";
 info.textContent="連続記録リセット…";
+
+// 視覚的にわかりやすく（画面フラッシュ）
+document.body.style.background="#550000";
+setTimeout(()=>document.body.style.background="#222",200);
+
 streak=0;
+updateProbDisplay();
 return;
 }
 
-info.textContent="現在: "+streak+"連勝 / 当たり確率: 1/"+Math.round(1/prob);
+info.textContent="現在: "+streak+"連勝";
+updateProbDisplay();
 }
+
+updateProbDisplay();
 </script>
 </body>
 </html>
